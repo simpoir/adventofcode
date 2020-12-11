@@ -1,0 +1,9 @@
+[package]
+name = "aoc2020"
+version = "0.1.0"
+authors = ["Simon Poirier <simpoir@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+json = "0.12.4"
+
