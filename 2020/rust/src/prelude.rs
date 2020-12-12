@@ -15,7 +15,7 @@ pub trait Challenge {
     fn run() -> Result<()> {
         println!("\n{}:", Self::NAME);
         let t0 = Instant::now();
-        let data = Self::gen(&mut File::open(format!("../data/{}.txt", Self::NAME)).unwrap())?;
+        let data = Self::gen(&mut File::open(format!("../data/{}.txt", Self::NAME))?)?;
         let t1 = Instant::now();
         println!("\tpart 1: {}", Self::part1(&data)?);
         let t2 = Instant::now();

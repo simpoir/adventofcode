@@ -158,3 +158,79 @@ pub mod day3 {
         }
     }
 }
+
+pub mod day12 {
+    use super::*;
+
+    pub struct Day {}
+
+    #[test]
+    fn test() {
+        Day::test();
+    }
+
+    impl Challenge for Day {
+        const NAME: &'static str = "day12";
+        type INPUT = Vec<String>;
+
+        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+            let mut res = String::new();
+            file.read_to_string(&mut res)?;
+            Ok(res.lines().map(String::from).collect())
+        }
+
+        fn part1(input: &Self::INPUT) -> Result<String> {
+            let mut heading = (1isize, 0isize);
+            let mut pos = (0isize, 0isize);
+            for line in input {
+                let (dir, count) = line.split_at(1);
+                let count: isize = count.parse().unwrap();
+                pos = match (dir, count) {
+                    ("N", y) => (pos.0, pos.1 + y),
+                    ("S", y) => (pos.0, pos.1 - y),
+                    ("E", x) => (pos.0 + x, pos.1),
+                    ("W", x) => (pos.0 - x, pos.1),
+                    ("F", n) => (pos.0 + heading.0 * n, pos.1 + heading.1 * n),
+                    ("R", 90) | ("L", 270) => {
+                        heading = (heading.1, -heading.0);
+                        pos
+                    }
+                    ("L", 90) | ("R", 270) => {
+                        heading = (-heading.1, heading.0);
+                        pos
+                    }
+                    (_, 180) => {
+                        heading = (-heading.0, -heading.1);
+                        pos
+                    }
+                    _ => unreachable!(),
+                };
+            }
+            Ok(format!("{}", pos.0.abs() + pos.1.abs()))
+        }
+
+        fn part2(input: &Self::INPUT) -> Result<String> {
+            let mut heading = (10isize, 1isize);
+            let mut pos = (0isize, 0isize);
+            for line in input {
+                let (dir, count) = line.split_at(1);
+                let count: isize = count.parse().unwrap();
+                heading = match (dir, count) {
+                    ("N", y) => (heading.0, heading.1 + y),
+                    ("S", y) => (heading.0, heading.1 - y),
+                    ("E", x) => (heading.0 + x, heading.1),
+                    ("W", x) => (heading.0 - x, heading.1),
+                    ("R", 90) | ("L", 270) => (heading.1, -heading.0),
+                    ("L", 90) | ("R", 270) => (-heading.1, heading.0),
+                    ("F", n) => {
+                        pos = (pos.0 + heading.0 * n, pos.1 + heading.1 * n);
+                        heading
+                    }
+                    (_, 180) => (-heading.0, -heading.1),
+                    _ => unreachable!(),
+                };
+            }
+            Ok(format!("{}", pos.0.abs() + pos.1.abs()))
+        }
+    }
+}

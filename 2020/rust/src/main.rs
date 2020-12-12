@@ -10,5 +10,6 @@ fn main() -> Result<()> {
     aoc::day3::Day::run()?;
     aoc::day10::Day::run()?;
     aoc::day11::Day::run()?;
+    aoc::day12::Day::run()?;
     Ok(())
 }
