@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import re
 from functools import reduce
 from itertools import chain, combinations, groupby
@@ -218,65 +217,3 @@ def day10(data):
 
     res2 = sum([paths[i] for i in range(1, 4) if i in paths])
     return res, res2
-
-
-def day11(data):
-    dirs = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0),
-            (1, 1))
-
-    def gen2(data):
-        graph = {}
-        for y, line in enumerate(data):
-            for x, c in enumerate(line):
-                if c == 'L':
-                    branches = graph.setdefault((x, y), [])
-                    for dx, dy in dirs:
-                        try:
-                            xx = x + dx
-                            yy = y + dy
-                            while xx >= 0 and yy >= 0:
-                                try:
-                                    if data[yy][xx] == 'L':
-                                        branches.append((xx, yy))
-                                        raise StopIteration
-                                except IndexError:
-                                    raise StopIteration
-                                xx += dx
-                                yy += dy
-                        except StopIteration:
-                            continue
-        return graph
-
-    def gen(data):
-        graph = {}
-        for y, line in enumerate(data):
-            for x, c in enumerate(line):
-                if c == 'L':
-                    branches = graph.setdefault((x, y), [])
-                    for dx, dy in dirs:
-                        xx = x+dx
-                        yy = y+dy
-                        try:
-                            if xx >= 0 and yy >= 0 and data[yy][xx] == 'L':
-                                branches.append((xx, yy))
-                        except IndexError:
-                            pass
-        return graph
-
-    def solve(graph, thresh=4):
-        settled = set()
-        while graph:
-            rubbish = set()
-            for pos, branches in graph.items():
-                if len(branches) < thresh:
-                    settled.add(pos)
-                    rubbish.add(pos)
-                    for b in branches:
-                        rubbish.add(b)
-            # prune after tagging
-            for p in rubbish:
-                for b in graph.pop(p):
-                    graph[b].remove(p)
-        return settled
-
-    return len(solve(gen(data))), len(solve(gen2(data), thresh=5))
