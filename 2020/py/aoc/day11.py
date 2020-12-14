@@ -10,24 +10,7 @@ dirs = (
 )
 
 
-def gen(data):
-    graph = {}
-    for y, line in enumerate(data):
-        for x, c in enumerate(line):
-            if c == "L":
-                branches = graph.setdefault((x, y), [])
-                for dx, dy in dirs:
-                    xx = x + dx
-                    yy = y + dy
-                    try:
-                        if xx >= 0 and yy >= 0 and data[yy][xx] == "L":
-                            branches.append((xx, yy))
-                    except IndexError:
-                        pass
-    return graph
-
-
-def gen2(data):
+def gen(data, max_dist=1):
     graph = {}
     for y, line in enumerate(data):
         for x, c in enumerate(line):
@@ -37,7 +20,9 @@ def gen2(data):
                     try:
                         xx = x + dx
                         yy = y + dy
-                        while xx >= 0 and yy >= 0:
+                        distance = 1
+                        while xx >= 0 and yy >= 0 and distance < max_dist:
+                            distance += 1
                             try:
                                 if data[yy][xx] == "L":
                                     branches.append((xx, yy))
@@ -84,4 +69,4 @@ def solve(graph, thresh=4):
 
 
 def day11(data):
-    return len(solve(gen(data))), len(solve(gen2(data), thresh=5))
+    return len(solve(gen(data))), len(solve(gen(data, 99), thresh=5))

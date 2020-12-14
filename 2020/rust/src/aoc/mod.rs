@@ -234,3 +234,69 @@ pub mod day12 {
         }
     }
 }
+
+pub mod day13 {
+    use super::*;
+
+    pub struct Day {}
+
+    #[test]
+    fn test() {
+        Day::test();
+    }
+
+    impl Challenge for Day {
+        const NAME: &'static str = "day13";
+        type INPUT = (usize, Vec<Option<usize>>);
+
+        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+            let mut res = String::new();
+            file.read_to_string(&mut res)?;
+            let (l1, tail) = res.split_at(res.find("\n").unwrap());
+            Ok((
+                l1.parse().unwrap(),
+                tail.trim()
+                    .split(",")
+                    .map(|x| match x {
+                        "x" => None,
+                        i => Some(i.parse().unwrap()),
+                    })
+                    .collect(),
+            ))
+        }
+
+        fn part1(input: &Self::INPUT) -> Result<String> {
+            let (ts, buses) = input;
+            let nexts = buses.iter().filter_map(|x| *x).map(|b| {
+                let n = b - (ts % b);
+                (n, b)
+            });
+            let result = nexts.min_by_key(|b| b.0).unwrap();
+            Ok(format!("{}", result.0 * result.1))
+        }
+
+        fn part2(input: &Self::INPUT) -> Result<String> {
+            let nexts: Vec<(usize, usize)> = input
+                .1
+                .iter()
+                .enumerate()
+                .filter_map(|x| match x.1 {
+                    None => None,
+                    Some(n) => Some((x.0, *n)),
+                })
+                .collect();
+            let (mut ts, inc) = nexts.iter().max_by_key(|k| k.1).unwrap();
+            ts = inc - ts;
+            'search: loop {
+                ts += inc; // cheat
+                for (offset, n) in &nexts {
+                    if (ts + offset) % n != 0 {
+                        continue 'search;
+                    }
+                }
+                break 'search;
+            }
+            Ok(format!("{}", ts))
+        }
+    }
+}
