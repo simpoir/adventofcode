@@ -1,16 +1,18 @@
 use prelude::*;
 
-mod aoc;
+#[macro_use]
 pub mod prelude;
+mod aoc;
 
 fn main() -> Result<()> {
     println!("AOC 2020, rustier edition.");
-    aoc::day1::Day::run()?;
-    aoc::day2::Day::run()?;
-    aoc::day3::Day::run()?;
+    aoc::day01::Day::run()?;
+    aoc::day02::Day::run()?;
+    aoc::day03::Day::run()?;
     aoc::day10::Day::run()?;
     aoc::day11::Day::run()?;
     aoc::day12::Day::run()?;
     aoc::day13::Day::run()?;
+    aoc::day14::Day::run()?;
     Ok(())
 }
