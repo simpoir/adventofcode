@@ -53,12 +53,23 @@ pub trait Challenge {
 }
 
 macro_rules! day {
+    ($i:ident;$($v:tt)*) => {
+        const NAME: &'static str = stringify!($i);
+        day! {
+            $($v)*
+        }
+    };
     ($($v:tt)*) => {
+        use crate::prelude::*;
+        use std::io::Read;
+
         pub struct Day {}
+
         #[test]
         fn test() {
             Day::test();
         }
+
         impl Challenge for Day {
             const NAME: &'static str = NAME;
             $($v)*

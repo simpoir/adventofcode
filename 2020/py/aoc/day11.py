@@ -1,3 +1,5 @@
+import time
+
 dirs = (
     (-1, -1),
     (-1, 0),
@@ -36,6 +38,19 @@ def gen(data, max_dist=1):
     return graph
 
 
+def draw(graph, settled):
+    grid = [['.' for _ in range(100)] for _ in range(100)]
+    for x, y in graph:
+        grid[y][x] = 'L'
+    for x, y in settled:
+        grid[y][x] = '#'
+
+    for row in grid:
+        print(''.join(row))
+    time.sleep(0.1)
+    print()
+
+
 def solve(graph, thresh=4):
     # Ok, this solution will sound look crazy, so allow me to explain.
     # Instead or iterating our little game of life, we solve it with maths.
@@ -47,6 +62,7 @@ def solve(graph, thresh=4):
     settled = set()
     # 3. run until there are no unknown-state seats.
     while graph:
+        # draw(graph, settled)
         # 4. keep a bin for to avoid removing items while iterating
         rubbish = set()
         # 5. for each position...
