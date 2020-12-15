@@ -51,3 +51,26 @@ pub trait Challenge {
         );
     }
 }
+
+macro_rules! day {
+    ($($v:tt)*) => {
+        pub struct Day {}
+        #[test]
+        fn test() {
+            Day::test();
+        }
+        impl Challenge for Day {
+            const NAME: &'static str = NAME;
+            $($v)*
+        }
+    };
+}
+
+macro_rules! day_mod {
+    {$i:ident; $($body:tt)*} => {
+        pub mod $i {
+            const NAME: &'static str = stringify!($i);
+            $($body)*
+        }
+    }
+}
