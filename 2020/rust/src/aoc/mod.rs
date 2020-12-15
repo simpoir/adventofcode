@@ -1,13 +1,8 @@
-use crate::prelude::*;
-use std::io::Read;
-
 pub mod day10;
 pub mod day11;
 
 day_mod! {
     day01;
-    use super::*;
-
     day! {
         type INPUT = Vec<u64>;
 
@@ -45,8 +40,6 @@ day_mod! {
 
 day_mod! {
     day02;
-    use super::*;
-
     day! {
         type INPUT = Vec<(usize, usize, char, String)>;
 
@@ -98,8 +91,6 @@ day_mod! {
 
 day_mod! {
     day03;
-    use super::*;
-
     fn check(input: &Vec<String>, x: usize, y: usize) -> usize {
         let mut pos: (usize, usize) = (0, 0);
         let mut count = 0;
@@ -140,8 +131,6 @@ day_mod! {
 
 day_mod! {
     day12;
-    use super::*;
-
     day! {
         type INPUT = Vec<String>;
 
@@ -209,8 +198,6 @@ day_mod! {
 
 day_mod! {
     day13;
-    use super::*;
-
     #[test]
     fn test_solve() {
         assert_eq!(9, ppcm(3, 5, 0, 1));
@@ -293,7 +280,6 @@ day_mod! {
 
 day_mod! {
     day14;
-    use super::*;
     use std::collections::BTreeMap;
 
     pub enum Cmd {
@@ -377,6 +363,47 @@ day_mod! {
                 }
             }
             Ok(format!("{:?}", mem.iter().map(|v| *v.1).sum::<u64>()))
+        }
+    }
+}
+
+day_mod! {
+    day15;
+
+    fn play(input: &[u64], nth: usize) -> u64 {
+        let mut known = vec![0u64; nth];
+        let mut round = 1;
+        let mut prev = input[0];
+        for i in 1..input.len() {
+            round += 1;
+            known[prev as usize] = i as u64;
+            prev = input[i];
+        }
+
+        while round != nth {
+            let say = match known[prev as usize] {0 => 0, x => (round as u64) - x};
+            known[prev as usize] = round as u64;
+            round += 1;
+            prev = say;
+        }
+        return prev
+    }
+
+    day! {
+        type INPUT = Vec<u64>;
+
+        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+            let mut input = String::new();
+            file.read_to_string(&mut input).unwrap();
+            Ok(input.trim().split(',').map(|x| x.parse().unwrap()).collect())
+        }
+
+        fn part1(input: &Self::INPUT) -> Result<String> {
+            Ok(format!("{}", play(&input[..], 2020)))
+        }
+
+        fn part2(input: &Self::INPUT) -> Result<String> {
+            Ok(format!("{}", play(&input[..], 30000000)))
         }
     }
 }

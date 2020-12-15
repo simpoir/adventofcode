@@ -1,9 +1,8 @@
-use super::*;
 use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 use std::convert::TryInto;
 
-pub struct Day {}
+const NAME: &'static str = "day11";
 
 type Pos = (usize, usize);
 
@@ -108,9 +107,8 @@ fn solve(mut graph: HashMap<Pos, RefCell<Vec<Pos>>>, threshold: usize) -> usize 
     settled.len()
 }
 
-impl Challenge for Day {
+day! {
     type INPUT = Vec<Vec<u8>>;
-    const NAME: &'static str = "day11";
 
     fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
         let mut res = String::new();
@@ -125,9 +123,4 @@ impl Challenge for Day {
     fn part2(input: &Self::INPUT) -> Result<String> {
         Ok(format!("{}", solve(graph2(input), 5)))
     }
-}
-
-#[test]
-fn test() {
-    Day::test();
 }

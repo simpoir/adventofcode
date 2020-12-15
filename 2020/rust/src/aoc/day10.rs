@@ -1,11 +1,8 @@
-use super::*;
 use std::collections::HashMap;
 
-pub struct Day {}
-
-impl Challenge for Day {
+day! {
+    day10;
     type INPUT = Vec<u64>;
-    const NAME: &'static str = "day10";
 
     fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
         let mut res = String::new();
@@ -41,9 +38,4 @@ impl Challenge for Day {
             (1..4).filter_map(|i| paths.get(&i)).sum::<usize>()
         ))
     }
-}
-
-#[test]
-fn test() {
-    Day::test();
 }
