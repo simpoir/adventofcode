@@ -1,6 +1,6 @@
-use std::fs::File;
-use std::io::Read;
+use std::io::BufRead;
 use std::time::Instant;
+use std::{fs::File, io::BufReader};
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -8,14 +8,17 @@ pub trait Challenge {
     type INPUT;
     const NAME: &'static str;
 
-    fn gen(file: &mut impl Read) -> Result<Self::INPUT>;
+    fn gen(file: &mut impl BufRead) -> Result<Self::INPUT>;
     fn part1(input: &Self::INPUT) -> Result<String>;
     fn part2(input: &Self::INPUT) -> Result<String>;
 
     fn run() -> Result<()> {
         println!("\n{}:", Self::NAME);
         let t0 = Instant::now();
-        let data = Self::gen(&mut File::open(format!("../data/{}.txt", Self::NAME))?)?;
+        let data = Self::gen(&mut BufReader::new(File::open(format!(
+            "../data/{}.txt",
+            Self::NAME
+        ))?))?;
         let t1 = Instant::now();
         println!("\tpart 1: {}", Self::part1(&data)?);
         let t2 = Instant::now();
@@ -31,7 +34,6 @@ pub trait Challenge {
     }
 
     fn test() {
-        use std::io::{BufRead, BufReader};
         let mut f = BufReader::new(File::open(format!("../data/{}.test", Self::NAME)).unwrap());
         let test = {
             let mut line = String::new();
@@ -61,7 +63,8 @@ macro_rules! day {
     };
     ($($v:tt)*) => {
         use crate::prelude::*;
-        use std::io::Read;
+        #[allow(unused_imports)]
+        use std::io::{Read, BufRead};
 
         pub struct Day {}
 
