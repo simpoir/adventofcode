@@ -8,7 +8,7 @@ day_mod! {
     day! {
         type INPUT = Vec<u64>;
 
-        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+        fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
             let mut res = String::new();
             file.read_to_string(&mut res)?;
             Ok(res.lines().map(|line| line.parse().unwrap()).collect())
@@ -45,7 +45,7 @@ day_mod! {
     day! {
         type INPUT = Vec<(usize, usize, char, String)>;
 
-        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+        fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
             let mut res = String::new();
             file.read_to_string(&mut res)?;
             Ok(res
@@ -109,7 +109,7 @@ day_mod! {
     day! {
         type INPUT = Vec<String>;
 
-        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+        fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
             let mut res = String::new();
             file.read_to_string(&mut res)?;
             Ok(res.lines().map(String::from).collect())
@@ -136,7 +136,7 @@ day_mod! {
     day! {
         type INPUT = Vec<String>;
 
-        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+        fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
             let mut res = String::new();
             file.read_to_string(&mut res)?;
             Ok(res.lines().map(String::from).collect())
@@ -227,7 +227,7 @@ day_mod! {
     day!{
         type INPUT = (usize, Vec<Option<usize>>);
 
-        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+        fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
             let mut res = String::new();
             file.read_to_string(&mut res)?;
             let (l1, tail) = res.split_at(res.find("\n").unwrap());
@@ -292,7 +292,7 @@ day_mod! {
     day! {
         type INPUT = Vec<Cmd>; // on, off (addr, val)
 
-        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+        fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
             let mut data = String::new();
             file.read_to_string(&mut data)?;
             Ok(data
@@ -394,7 +394,7 @@ day_mod! {
     day! {
         type INPUT = Vec<u64>;
 
-        fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+        fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
             let mut input = String::new();
             file.read_to_string(&mut input).unwrap();
             Ok(input.trim().split(',').map(|x| x.parse().unwrap()).collect())

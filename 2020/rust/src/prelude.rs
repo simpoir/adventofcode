@@ -63,8 +63,7 @@ macro_rules! day {
     };
     ($($v:tt)*) => {
         use crate::prelude::*;
-        #[allow(unused_imports)]
-        use std::io::{Read, BufRead};
+        use std::io::BufRead;
 
         pub struct Day {}
 

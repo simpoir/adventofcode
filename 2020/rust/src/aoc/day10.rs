@@ -4,7 +4,7 @@ day! {
     day10;
     type INPUT = Vec<u64>;
 
-    fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+    fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
         let mut res = String::new();
         file.read_to_string(&mut res)?;
         let mut arr: Vec<u64> = res.lines().map(|line| line.parse().unwrap()).collect();
