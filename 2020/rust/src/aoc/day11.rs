@@ -110,7 +110,7 @@ fn solve(mut graph: HashMap<Pos, RefCell<Vec<Pos>>>, threshold: usize) -> usize 
 day! {
     type INPUT = Vec<Vec<u8>>;
 
-    fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+    fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
         let mut res = String::new();
         file.read_to_string(&mut res)?;
         Ok(res.lines().map(|x| x.into()).collect())

@@ -5,7 +5,7 @@ const NAME: &'static str = "day16";
 day! {
     type INPUT = (BTreeMap<String, (u32, u32, u32, u32)>, Vec<u32>, Vec<Vec<u32>>);
 
-    fn gen(file: &mut impl Read) -> Result<Self::INPUT> {
+    fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
         let mut data = String::new();
         file.read_to_string(&mut data)?;
         let mut it = data.lines();
