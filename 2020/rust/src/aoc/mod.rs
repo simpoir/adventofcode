@@ -2,6 +2,7 @@ pub mod day10;
 pub mod day11;
 pub mod day16;
 pub mod day17;
+pub mod day18;
 
 day_mod! {
     day01;
