@@ -42,7 +42,7 @@ day! {
             res.push(',');
             res.push_str(&s);
         }
-        Ok(format!("{}", res))
+        Ok(res)
     }
 }
 
