@@ -24,7 +24,7 @@ day! {
         Ok(value.to_string())
     }
 
-    fn part2(input: &Self::INPUT) -> Result<String> {
+    fn part2(_: &Self::INPUT) -> Result<String> {
         Ok("".into())
     }
 }

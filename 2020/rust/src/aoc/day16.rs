@@ -1,9 +1,11 @@
 use std::collections::BTreeMap;
 
-const NAME: &'static str = "day16";
+const NAME: &str = "day16";
+
+type Constraints = BTreeMap<String, (u32, u32, u32, u32)>;
 
 day! {
-    type INPUT = (BTreeMap<String, (u32, u32, u32, u32)>, Vec<u32>, Vec<Vec<u32>>);
+    type INPUT = (Constraints, Vec<u32>, Vec<Vec<u32>>);
 
     fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
         let mut data = String::new();
@@ -88,7 +90,7 @@ day! {
 
 fn check<'a>(
     fields: &BTreeMap<String, (u32, u32, u32, u32)>,
-    tickets: &'a Vec<Vec<u32>>,
+    tickets: &'a [Vec<u32>],
 ) -> (u32, Vec<&'a Vec<u32>>) {
     let mut valid = vec![];
     let mut error_rate = 0;

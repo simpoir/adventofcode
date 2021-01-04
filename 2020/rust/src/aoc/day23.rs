@@ -50,7 +50,7 @@ day! {
 /// Play.
 /// `cups` is just a buffer of size N+1. It'll contain the end configuration.
 /// It's an indexed linked list in a stack-allocated slice. Should be fast.
-fn play(input: &Vec<u8>, rounds: usize, cups: &mut [usize]) {
+fn play(input: &[u8], rounds: usize, cups: &mut [usize]) {
     let n_cups = cups.len();
     let mut it = input
         .iter()
@@ -80,7 +80,7 @@ fn play(input: &Vec<u8>, rounds: usize, cups: &mut [usize]) {
             if dest != picked3 && dest != picked2 && dest != picked1 {
                 break;
             }
-            dest = dest - 1;
+            dest -= 1;
         }
 
         cups[picked3] = cups[dest];

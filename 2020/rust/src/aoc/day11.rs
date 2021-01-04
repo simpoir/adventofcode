@@ -2,11 +2,11 @@ use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 use std::convert::TryInto;
 
-const NAME: &'static str = "day11";
+const NAME: &str = "day11";
 
 type Pos = (usize, usize);
 
-fn graph1(input: &Vec<Vec<u8>>) -> HashMap<Pos, RefCell<Vec<Pos>>> {
+fn graph1(input: &[Vec<u8>]) -> HashMap<Pos, RefCell<Vec<Pos>>> {
     let dirs: [(isize, usize); 4] = [(-1, 1), (0, 1), (1, 1), (1, 0)];
     let width = input[0].len();
     let height = input.len();
@@ -38,7 +38,7 @@ fn graph1(input: &Vec<Vec<u8>>) -> HashMap<Pos, RefCell<Vec<Pos>>> {
     res
 }
 
-fn graph2(input: &Vec<Vec<u8>>) -> HashMap<Pos, RefCell<Vec<Pos>>> {
+fn graph2(input: &[Vec<u8>]) -> HashMap<Pos, RefCell<Vec<Pos>>> {
     let dirs: [(isize, usize); 4] = [(-1, 1), (0, 1), (1, 1), (1, 0)];
     let width = input[0].len();
     let height = input.len();
