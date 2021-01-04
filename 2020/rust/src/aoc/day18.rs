@@ -51,10 +51,10 @@ fn calc2<'a>(operand: u64, operator: &Tok, expr: &mut impl Iterator<Item = &'a T
     }
 
     if let Tok::Add = operator {
-        return calc2(operand + b, op.unwrap(), expr);
+        calc2(operand + b, op.unwrap(), expr)
     } else {
-        return operand * calc2(b, op.unwrap(), expr);
-    };
+        operand * calc2(b, op.unwrap(), expr)
+    }
 }
 
 enum Tok {
@@ -67,8 +67,7 @@ enum Tok {
 
 fn tokenize(expr: &str) -> Vec<Tok> {
     let mut res = vec![];
-    let mut it = expr.bytes();
-    while let Some(c) = it.next() {
+    for c in expr.bytes() {
         match c {
             b'(' => res.push(Tok::Start),
             b')' => res.push(Tok::End),

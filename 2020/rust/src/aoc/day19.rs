@@ -14,11 +14,11 @@ fn compile(data: &str) -> Chunk {
         let (_, tail) = tail.split_at(3);
         return Chunk::Alt(Box::new(compile(head)), Box::new(compile(tail)));
     }
-    if data.chars().nth(0) == Some('"') {
+    if data.starts_with('"') {
         return Chunk::Lit(data.bytes().nth(1).unwrap());
     }
-    let chain: Vec<&str> = data.split(" ").collect();
-    return match chain.len() {
+    let chain: Vec<&str> = data.split(' ').collect();
+    match chain.len() {
         1 => Chunk::Ref(chain[0].parse().unwrap()),
         2 => Chunk::Chain(chain[0].parse().unwrap(), chain[1].parse().unwrap()),
         3 => Chunk::Chain3(
@@ -27,7 +27,7 @@ fn compile(data: &str) -> Chunk {
             chain[2].parse().unwrap(),
         ),
         _ => unimplemented!(),
-    };
+    }
 }
 
 day! {
@@ -39,7 +39,7 @@ day! {
         let mut it = file.lines();
         while let Some(l) = it.next() {
             let l = l?;
-            if l.len() == 0 {
+            if l.is_empty() {
                 break;
             }
             rule_lines.push(l);

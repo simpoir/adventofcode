@@ -32,7 +32,7 @@ day! {
                     return true;
                 }
                 // shamelessly clone refs, like a barbarian.
-                identified.insert(k, v.iter().next().unwrap().clone());
+                identified.insert(k, v.iter().next().unwrap());
                 false
             });
         }
@@ -46,7 +46,7 @@ day! {
     }
 }
 
-fn matchify(input: &Vec<(HashSet<String>, Vec<String>)>) -> HashMap<&String, HashSet<&String>> {
+fn matchify(input: &[(HashSet<String>, Vec<String>)]) -> HashMap<&String, HashSet<&String>> {
     let mut possible_matches: HashMap<&String, HashSet<&String>> = HashMap::new();
     for (ingredients, allergens) in input {
         for allergen in allergens {

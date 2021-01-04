@@ -75,7 +75,7 @@ pub enum Dir {
     SW,
 }
 
-fn layout(input: &Vec<Vec<Dir>>) -> BTreeSet<(isize, isize)> {
+fn layout(input: &[Vec<Dir>]) -> BTreeSet<(isize, isize)> {
     let mut black = BTreeSet::new();
     for row in input {
         let pos = row

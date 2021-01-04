@@ -101,7 +101,7 @@ day_mod! {
 
 day_mod! {
     day03;
-    fn check(input: &Vec<String>, x: usize, y: usize) -> usize {
+    fn check(input: &[String], x: usize, y: usize) -> usize {
         let mut pos: (usize, usize) = (0, 0);
         let mut count = 0;
         let len = input[0].len();
@@ -111,7 +111,7 @@ day_mod! {
             }
             pos = (pos.0 + x, pos.1 + y);
         }
-        return count;
+        count
     }
 
     day! {
@@ -128,13 +128,12 @@ day_mod! {
         }
 
         fn part2(input: &Self::INPUT) -> Result<String> {
-            Ok(format!(
-                "{}",
-                [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
-                    .iter()
-                    .map(|(x, y)| check(input, *x, *y))
-                    .fold(1, |a, b| a * b)
-            ))
+            Ok([(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+                .iter()
+                .map(|(x, y)| check(input, *x, *y))
+                .product::<usize>()
+                .to_string()
+            )
         }
     }
 }
@@ -238,11 +237,11 @@ day_mod! {
         fn gen(file: &mut impl BufRead) -> Result<Self::INPUT> {
             let mut res = String::new();
             file.read_to_string(&mut res)?;
-            let (l1, tail) = res.split_at(res.find("\n").unwrap());
+            let (l1, tail) = res.split_at(res.find('\n').unwrap());
             Ok((
                 l1.parse().unwrap(),
                 tail.trim()
-                    .split(",")
+                    .split(',')
                     .map(|x| match x {
                         "x" => None,
                         i => Some(i.parse().unwrap()),
@@ -350,13 +349,7 @@ day_mod! {
                         let float_mask =
                             !(masks.0 | masks.1) & 0b111111111111111111111111111111111111;
                         let floats: Vec<u64> = (0..36)
-                            .filter_map(|i| {
-                                if (float_mask >> i) & 1 == 1 {
-                                    Some(i)
-                                } else {
-                                    None
-                                }
-                            })
+                            .filter(|i| (float_mask >> i) & 1 == 1)
                             .collect();
                         let float_count: u64 = 1 << floats.len();
                         let addr = addr & masks.0; // filter zeros
@@ -384,10 +377,10 @@ day_mod! {
         let mut known = vec![0u64; nth];
         let mut round = 1;
         let mut prev = input[0];
-        for i in 1..input.len() {
+        for (i, item) in input.iter().enumerate().skip(1) {
             round += 1;
             known[prev as usize] = i as u64;
-            prev = input[i];
+            prev = *item;
         }
 
         while round != nth {
@@ -396,7 +389,7 @@ day_mod! {
             round += 1;
             prev = say;
         }
-        return prev
+        prev
     }
 
     day! {

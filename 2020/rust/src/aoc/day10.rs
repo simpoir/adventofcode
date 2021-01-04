@@ -8,7 +8,7 @@ day! {
         let mut res = String::new();
         file.read_to_string(&mut res)?;
         let mut arr: Vec<u64> = res.lines().map(|line| line.parse().unwrap()).collect();
-        arr.sort();
+        arr.sort_unstable();
         Ok(arr)
     }
 

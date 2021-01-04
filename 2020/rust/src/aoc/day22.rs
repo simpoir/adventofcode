@@ -105,14 +105,12 @@ fn play_rec(first: &mut VecDeque<u8>, second: &mut VecDeque<u8>) -> Player {
                     second.push_back(a);
                 }
             }
+        } else if a > b {
+            first.push_back(a);
+            first.push_back(b);
         } else {
-            if a > b {
-                first.push_back(a);
-                first.push_back(b);
-            } else {
-                second.push_back(b);
-                second.push_back(a);
-            }
+            second.push_back(b);
+            second.push_back(a);
         }
     }
 }

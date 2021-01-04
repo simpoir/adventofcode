@@ -16,11 +16,11 @@ impl std::fmt::Debug for Tile {
         for s in &self.sides {
             write!(f, "{}({}) ", s, rbit(*s))?;
         }
-        f.write_str("\n")?;
+        writeln!(f)?;
         for l in &self.img {
-            write!(f, "{}\n", String::from_utf8_lossy(l))?;
+            writeln!(f, "{}", String::from_utf8_lossy(l))?;
         }
-        write!(f, "]]\n")
+        writeln!(f, "]]")
     }
 }
 
@@ -51,15 +51,13 @@ day! {
             sides[3] = if top[0] == b'#' { 1 } else { 0 };
 
             let mut img: IMG = Default::default();
-            for j in 0..IMG_DIM {
+            for dst_row in img.iter_mut() {
                 let l = lines.next().unwrap().into_bytes();
                 sides[1] <<= 1;
                 sides[3] <<= 1;
                 sides[1] |= if l[9] == b'#' { 1 } else { 0 };
                 sides[3] |= if l[0] == b'#' { 1 } else { 0 };
-                for i in 1..=IMG_DIM {
-                    img[j][i-1] = l[i];
-                }
+                dst_row[..].clone_from_slice(&l[1..IMG_DIM + 1])
             }
 
             let bottom = lines.next().unwrap().into_bytes();
@@ -96,12 +94,10 @@ day! {
             }
         }
 
-        let top_left = tiles.values().filter_map(|tile| {
+        let top_left = tiles.values().find(|tile| {
             let matching = tile.sides.iter().filter(|x| sides_index[x].len() > 1).count();
-            if matching == 2 {
-                Some(tile)
-            } else { None }
-        }).next().expect("obvious corner");
+            matching == 2
+        }).expect("obvious corner");
 
         // orient first corner
         let top_left = rotate(top_left, match (sides_index[&top_left.sides[0]].len() == 1,
@@ -137,7 +133,7 @@ day! {
                 let to_match = rbit(prev_tile.sides[2]); // match is mirror
                 let matching_tile = sides_index[&to_match].iter().find(|x| {
                     x.unwrap() != prev_tile_id
-                }).expect(&format!("match of {}", to_match));
+                }).expect("matching side");
                 let tile = match matching_tile {
                     Orientation::Straight(rot, id) => brot(&tiles[id], *rot),
                     Orientation::Flipped(rot, id) => fbrot(&tiles[id], *rot),
@@ -192,12 +188,13 @@ day! {
             grid = grid.drain(..).rev().collect();
         }
 
+        #[allow(clippy::naive_bytecount)]
         Ok(format!("{}", grid.iter().map(|row| row.iter().filter(|c| **c == b'#').count()).sum::<usize>()))
     }
 }
 
 /// search and tag monsters, returning matched count.
-fn monsearch(grid: &mut Vec<Vec<u8>>, coords: &Vec<(usize, usize)>) -> usize {
+fn monsearch(grid: &mut Vec<Vec<u8>>, coords: &[(usize, usize)]) -> usize {
     let mut res = 0;
     for i in 0..(grid.len() - 20) {
         'pos: for j in 0..(grid.len() - 3) {
@@ -305,19 +302,15 @@ fn rotate(input: &Tile, rot: Rot) -> Tile {
     let mut sides = [0u16; 4];
     match rot {
         Rot::R0 => {
-            for j in 0..IMG_DIM {
-                for i in 0..IMG_DIM {
-                    output[j][i] = input.img[j][i];
-                }
+            for (j, out_row) in output.iter_mut().enumerate() {
+                out_row[..].clone_from_slice(&input.img[j][..]);
             }
-            for i in 0..4 {
-                sides[i] = input.sides[i];
-            }
+            sides[..].clone_from_slice(&input.sides[..]);
         }
         Rot::R90 => {
-            for j in 0..IMG_DIM {
-                for i in 0..IMG_DIM {
-                    output[j][i] = input.img[IMG_DIM - 1 - i][j];
+            for (j, out_row) in output.iter_mut().enumerate() {
+                for (i, in_col) in input.img.iter().enumerate() {
+                    out_row[IMG_DIM - 1 - i] = in_col[j];
                 }
             }
             sides[0] = input.sides[3];
@@ -326,9 +319,9 @@ fn rotate(input: &Tile, rot: Rot) -> Tile {
             sides[3] = input.sides[2];
         }
         Rot::R180 => {
-            for j in 0..IMG_DIM {
-                for i in 0..IMG_DIM {
-                    output[j][i] = input.img[IMG_DIM - 1 - j][IMG_DIM - 1 - i];
+            for (out_row, in_row) in output.iter_mut().zip(input.img.iter().rev()) {
+                for (i, item) in in_row.iter().rev().enumerate() {
+                    out_row[i] = *item;
                 }
             }
             sides[0] = input.sides[2];
@@ -337,9 +330,9 @@ fn rotate(input: &Tile, rot: Rot) -> Tile {
             sides[3] = input.sides[1];
         }
         Rot::R270 => {
-            for j in 0..IMG_DIM {
-                for i in 0..IMG_DIM {
-                    output[j][i] = input.img[i][IMG_DIM - 1 - j];
+            for (j, out_row) in output.iter_mut().enumerate() {
+                for (i, in_col) in input.img.iter().enumerate() {
+                    out_row[i] = in_col[IMG_DIM - 1 - j];
                 }
             }
             for i in 0..4 {
@@ -360,8 +353,8 @@ fn rotate(input: &Tile, rot: Rot) -> Tile {
 
 fn flip_v(input: &Tile) -> Tile {
     let mut output = [[0u8; IMG_DIM]; IMG_DIM];
-    for j in 0..IMG_DIM {
-        output[j] = input.img[IMG_DIM - 1 - j];
+    for (j, item) in output.iter_mut().enumerate() {
+        *item = input.img[IMG_DIM - 1 - j];
     }
     let mut sides = [0u16; 4];
     sides[2] = rbit(input.sides[0]);
