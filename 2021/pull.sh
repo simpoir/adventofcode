@@ -27,9 +27,9 @@ touch $DATADIR/sample
 tmpout=$(mktemp)
 curl -H "cookie: $COOKIE" https://adventofcode.com/$YEAR/day/$DAY -o $tmpout
 # We're totally guessing at the format here.
-xmllint --html --xpath '(//pre/code/text())[1]' $tmpout 2>/dev/null | sed -z 's/\n$//' > $DATADIR/sample
+xmllint --html --xpath '(//pre/code/text())[1]' $tmpout 2>/dev/null | sed -z -e 's/&gt;/>/g' -e 's/\n$//' > $DATADIR/sample
 xmllint --html --xpath '(//article[1]//code[count(./em) = 1]//text())[last()]
 |(//article[2]//code[count(./em) = 1]//text())[last()]
 |(//article[1]//em[count(./code) = 1]//text())[last()]
-|(//article[2]//em[count(./code) = 1]//text())[last()]' $tmpout 2>/dev/null | sed -z 's/\n$//' > $DATADIR/expected
+	|(//article[2]//em[count(./code) = 1]//text())[last()]' $tmpout 2>/dev/null | sed -z -e 's/\n$//' > $DATADIR/expected
 rm $tmpout
