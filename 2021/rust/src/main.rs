@@ -2,21 +2,21 @@ use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::time::Instant;
 
 use clap::Arg;
 
-static TIMINGS: AtomicBool = AtomicBool::new(true);
+pub static TIMINGS: AtomicBool = AtomicBool::new(true);
 static BENCH: AtomicBool = AtomicBool::new(false);
 static PART1: AtomicBool = AtomicBool::new(true);
 static PART2: AtomicBool = AtomicBool::new(true);
 
+#[macro_export]
 macro_rules! timed {
     ($($code:tt)+) => {{
-        let t0 = Instant::now();
+        let t0 = std::time::Instant::now();
         let res = { $($code)+ };
-        let t1 = Instant::now();
-        if TIMINGS.load(Ordering::Relaxed) {
+        let t1 = std::time::Instant::now();
+        if crate::TIMINGS.load(std::sync::atomic::Ordering::Relaxed) {
             let delta = (t1 - t0).as_secs_f32();
             print!("{}{}{}{}{}",
                    ansi_escapes::CursorSavePosition,

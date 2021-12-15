@@ -1,4 +1,4 @@
-use std::collections::BTreeSet;
+use std::collections::BinaryHeap;
 
 pub struct Day {}
 
@@ -13,36 +13,9 @@ impl crate::Day for Day {
     }
 
     fn part1(&self, input: &Self::Input) -> String {
-        let end = (input[0].len() - 1, input.len() - 1);
-        let mut explored = vec![vec![false; input[0].len()]; input.len()];
-        let mut explorable: BTreeSet<(isize, (usize, usize))> = BTreeSet::new();
-        explorable.insert((input[0][0], (0, 0)));
-
-        loop {
-            let here = *explorable.iter().min_by(|(x, _), (y, _)| x.cmp(y)).unwrap();
-            if here.1 == end {
-                return format!("{}", here.0 - input[0][0]);
-            }
-            explorable.remove(&here);
-            let (lvl, (x, y)) = here;
-            if explored[y][x] {
-                continue;
-            }
-            explored[y][x] = true;
-            if x > 0 {
-                explorable.insert((lvl + input[y][x - 1], (x - 1, y)));
-            }
-            if y > 0 {
-                explorable.insert((lvl + input[y - 1][x], (x, y - 1)));
-            }
-            if x < end.0 {
-                explorable.insert((lvl + input[y][x + 1], (x + 1, y)));
-            }
-            if y < end.1 {
-                explorable.insert((lvl + input[y + 1][x], (x, y + 1)));
-            }
-        }
+        format!("{}", solve(input))
     }
+
     fn part2(&self, input: &Self::Input) -> String {
         let input: Self::Input = input
             .iter()
@@ -62,34 +35,36 @@ impl crate::Day for Day {
             .flatten()
             .collect();
 
-        let end = (input[0].len() - 1, input.len() - 1);
-        let mut explored = vec![vec![false; input[0].len()]; input.len()];
-        let mut explorable: BTreeSet<(isize, (usize, usize))> = BTreeSet::new();
-        explorable.insert((input[0][0], (0, 0)));
+        format!("{}", solve(&input))
+    }
+}
 
-        loop {
-            let here = *explorable.iter().min_by(|(x, _), (y, _)| x.cmp(y)).unwrap();
-            if here.1 == end {
-                return format!("{}", here.0 - input[0][0]);
-            }
-            explorable.remove(&here);
-            let (lvl, (x, y)) = here;
-            if explored[y][x] {
-                continue;
-            }
-            explored[y][x] = true;
-            if x > 0 {
-                explorable.insert((lvl + input[y][x - 1], (x - 1, y)));
-            }
-            if y > 0 {
-                explorable.insert((lvl + input[y - 1][x], (x, y - 1)));
-            }
-            if x < end.0 {
-                explorable.insert((lvl + input[y][x + 1], (x + 1, y)));
-            }
-            if y < end.1 {
-                explorable.insert((lvl + input[y + 1][x], (x, y + 1)));
-            }
+fn solve(input: &[Vec<isize>]) -> isize {
+    let end = (input[0].len() - 1, input.len() - 1);
+    let mut explored = vec![vec![false; input[0].len()]; input.len()];
+    let mut explorable: BinaryHeap<(isize, (usize, usize))> = BinaryHeap::new();
+    explorable.push((0, (0, 0)));
+    loop {
+        let here = explorable.pop().unwrap();
+        let (lvl, (x, y)) = here;
+        if explored[y][x] {
+            continue;
+        }
+        explored[y][x] = true;
+        if here.1 == end {
+            return -here.0;
+        }
+        if x > 0 {
+            explorable.push((lvl - input[y][x - 1], (x - 1, y)));
+        }
+        if y > 0 {
+            explorable.push((lvl - input[y - 1][x], (x, y - 1)));
+        }
+        if x < end.0 {
+            explorable.push((lvl - input[y][x + 1], (x + 1, y)));
+        }
+        if y < end.1 {
+            explorable.push((lvl - input[y + 1][x], (x, y + 1)));
         }
     }
 }
