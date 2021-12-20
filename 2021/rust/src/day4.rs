@@ -130,7 +130,7 @@ fn print_board<T: std::fmt::Debug>(board: &[Vec<T>]) {
 }
 
 #[allow(dead_code)]
-fn print_state(board: &[Vec<bool>]) {
+pub fn print_state(board: &[Vec<bool>]) {
     println!();
     board.iter().for_each(|l| {
         println!(
