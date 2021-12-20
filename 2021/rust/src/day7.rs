@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Day {}
 
 impl crate::Day for Day {

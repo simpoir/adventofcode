@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 
+#[derive(Default)]
 pub struct Day {}
 
 impl crate::Day for Day {

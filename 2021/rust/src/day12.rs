@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Day {}
 
 pub struct Node {

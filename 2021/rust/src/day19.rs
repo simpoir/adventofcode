@@ -1,6 +1,4 @@
-use std::{cell::RefCell, io::Write};
-
-pub struct Day {}
+use std::{cell::RefCell, collections::VecDeque, io::Write};
 
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
 pub struct Point(isize, isize, isize);
@@ -12,7 +10,9 @@ enum Rot {
     Z,
 }
 
-thread_local! { static OFFSETS: RefCell<Scan> = RefCell::new(vec![])}
+pub struct Day {
+    offsets: RefCell<Scan>,
+}
 
 const ALL_POS: [Rot; 24] = [
     Rot::Z,
@@ -40,6 +40,14 @@ const ALL_POS: [Rot; 24] = [
     Rot::Z,
     Rot::Z,
 ];
+
+impl Default for Day {
+    fn default() -> Self {
+        Self {
+            offsets: RefCell::new(vec![]),
+        }
+    }
+}
 
 impl crate::Day for Day {
     type Input = Vec<Scan>;
@@ -70,38 +78,36 @@ impl crate::Day for Day {
     fn part1(&self, input: &Self::Input) -> String {
         // all points relative to scan 0
         let mut abs = std::collections::HashSet::new();
-        let mut remaining: Vec<Scan> = input[1..].to_vec();
+        let mut remaining: VecDeque<Scan> = VecDeque::from_iter(input[1..].iter().cloned());
         abs.extend(input[0].iter().cloned());
-        OFFSETS.with(|o| o.borrow_mut().push(Point(0, 0, 0)));
+        self.offsets.borrow_mut().push(Point(0, 0, 0));
 
-        'matching: while !remaining.is_empty() {
+        'matching: while let Some(mut scan) = remaining.pop_front() {
             print!(
-                "{}unmatched scanners: {}",
+                "{}unmatched scanners: {} ",
                 ansi_escapes::CursorTo::AbsoluteX(0),
-                remaining.len()
+                remaining.len() + 1
             );
             std::io::stdout().flush().unwrap();
-            for (n, scan) in remaining.iter().enumerate() {
-                let (matching, offset) = best_match(&abs, scan);
+
+            let (matching, offset) = best_match(&abs, &scan);
+            if matching >= 12 {
+                abs.extend(scan.iter().map(|n| n + &offset));
+                self.offsets.borrow_mut().push(offset);
+                continue 'matching;
+            }
+            for dir in ALL_POS {
+                (0..scan.len()).for_each(|i| {
+                    scan[i] = rot3d(&scan[i], &dir);
+                });
+                let (matching, offset) = best_match(&abs, &scan);
                 if matching >= 12 {
                     abs.extend(scan.iter().map(|n| n + &offset));
-                    OFFSETS.with(|o| o.borrow_mut().push(offset));
-                    remaining.remove(n);
+                    self.offsets.borrow_mut().push(offset);
                     continue 'matching;
                 }
-                let mut scan = scan.clone();
-                for dir in ALL_POS {
-                    scan = scan.drain(..).map(|p| rot3d(p, &dir)).collect();
-                    let (matching, offset) = best_match(&abs, &scan);
-                    if matching >= 12 {
-                        abs.extend(scan.iter().map(|n| n + &offset));
-                        OFFSETS.with(|o| o.borrow_mut().push(offset));
-                        remaining.remove(n);
-                        continue 'matching;
-                    }
-                }
             }
-            panic!("no matches with remaining scanners");
+            remaining.push_back(scan);
         }
 
         print!(
@@ -115,18 +121,16 @@ impl crate::Day for Day {
 
     fn part2(&self, input: &Self::Input) -> String {
         let mut res: usize = 0;
-        OFFSETS.with(|o| {
-            if o.borrow().is_empty() {
-                self.part1(input);
-            }
+        if self.offsets.borrow().is_empty() {
+            self.part1(input);
+        }
 
-            let o = o.borrow();
-            for a in o.iter() {
-                for b in o.iter() {
-                    res = res.max(manhattan(a, b));
-                }
+        let o = self.offsets.borrow();
+        for a in o.iter() {
+            for b in o.iter() {
+                res = res.max(manhattan(a, b));
             }
-        });
+        }
         format!("{}", res)
     }
 }
@@ -151,6 +155,9 @@ where
                 }
             }
             if matching > best {
+                if matching >= 12 {
+                    return (matching, offset);
+                }
                 best = matching;
                 best_offset = offset;
             }
@@ -159,11 +166,11 @@ where
     (best, best_offset)
 }
 
-fn rot3d(p: Point, dir: &Rot) -> Point {
+fn rot3d(p: &Point, dir: &Rot) -> Point {
     match dir {
+        Rot::Z => Point(p.1, -p.0, p.2),
         Rot::X => Point(p.0, p.2, -p.1),
         Rot::Y => Point(p.2, p.1, -p.0),
-        Rot::Z => Point(p.1, -p.0, p.2),
     }
 }
 

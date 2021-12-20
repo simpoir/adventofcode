@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Day {}
 
 #[derive(Debug, PartialEq)]

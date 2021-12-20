@@ -1,5 +1,6 @@
 use std::collections::BinaryHeap;
 
+#[derive(Default)]
 pub struct Day {}
 
 impl crate::Day for Day {

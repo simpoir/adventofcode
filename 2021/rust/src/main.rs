@@ -34,7 +34,7 @@ macro_rules! timed {
     }};
 }
 
-pub trait Day {
+pub trait Day: Default {
     type Input;
 
     fn gen(&self, data: &str) -> Self::Input;

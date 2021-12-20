@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Day {}
 
 fn score(c: char) -> usize {

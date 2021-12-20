@@ -8,6 +8,7 @@ pub struct Game {
     boards: Vec<Board>,
 }
 
+#[derive(Default)]
 pub struct Day {}
 
 impl crate::Day for Day {

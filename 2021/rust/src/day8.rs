@@ -1,5 +1,6 @@
 use std::collections::BTreeSet;
 
+#[derive(Default)]
 pub struct Day {}
 
 type Pattern = BTreeSet<char>;

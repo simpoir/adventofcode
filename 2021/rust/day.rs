@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Day {}
 
 impl crate::Day for Day {
@@ -11,6 +12,7 @@ impl crate::Day for Day {
         let res = "";
         format!("{}", res)
     }
+
     fn part2(&self, input: &Self::Input) -> String {
         let res = "";
         format!("{}", res)

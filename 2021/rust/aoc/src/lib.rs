@@ -10,7 +10,7 @@ pub fn make_registry(_item: TokenStream) -> TokenStream {
             let f = format!("day{}", i);
             code.push_str(&format!("mod {};", f));
             registry.push_str(&format!(
-                "coll.push((\"{0}\", Box::new(|d: String, e: Option<(&str, &str)>| {0}::Day{{}}.run(&d, e)) as Box<dyn Fn(String, Option<(&str, &str)>)+ 'static>));\n",
+                "coll.push((\"{0}\", Box::new(|d: String, e: Option<(&str, &str)>| {0}::Day::default().run(&d, e)) as Box<dyn Fn(String, Option<(&str, &str)>)+ 'static>));\n",
                 f
             ));
         }

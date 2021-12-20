@@ -1,5 +1,6 @@
 use std::{cmp::Ordering, iter::repeat};
 
+#[derive(Default)]
 pub struct Day {}
 
 impl crate::Day for Day {
