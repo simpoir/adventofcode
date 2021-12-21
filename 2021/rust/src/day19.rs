@@ -77,7 +77,7 @@ impl crate::Day for Day {
 
     fn part1(&self, input: &Self::Input) -> String {
         // all points relative to scan 0
-        let mut abs = std::collections::HashSet::new();
+        let mut abs = vec![];
         let mut remaining: VecDeque<Scan> = VecDeque::from_iter(input[1..].iter().cloned());
         abs.extend(input[0].iter().cloned());
         self.offsets.borrow_mut().push(Point(0, 0, 0));
@@ -90,9 +90,13 @@ impl crate::Day for Day {
             );
             std::io::stdout().flush().unwrap();
 
-            let (matching, offset) = best_match(&abs, &scan);
+            let (matching, offset) = best_match(abs.iter().rev(), &scan);
             if matching >= 12 {
-                abs.extend(scan.iter().map(|n| n + &offset));
+                scan.iter().map(|n| n + &offset).for_each(|n| {
+                    if !abs.contains(&n) {
+                        abs.push(n)
+                    }
+                });
                 self.offsets.borrow_mut().push(offset);
                 continue 'matching;
             }
@@ -100,9 +104,13 @@ impl crate::Day for Day {
                 (0..scan.len()).for_each(|i| {
                     scan[i] = rot3d(&scan[i], &dir);
                 });
-                let (matching, offset) = best_match(&abs, &scan);
+                let (matching, offset) = best_match(abs.iter().rev(), &scan);
                 if matching >= 12 {
-                    abs.extend(scan.iter().map(|n| n + &offset));
+                    scan.iter().map(|n| n + &offset).for_each(|n| {
+                        if !abs.contains(&n) {
+                            abs.push(n)
+                        }
+                    });
                     self.offsets.borrow_mut().push(offset);
                     continue 'matching;
                 }
@@ -135,19 +143,18 @@ impl crate::Day for Day {
     }
 }
 
-fn best_match<'a, T>(a: &'a T, b: &[Point]) -> (usize, Point)
+fn best_match<'a, T>(a: T, b: &[Point]) -> (usize, Point)
 where
-    &'a T: IntoIterator<Item = &'a Point>,
-    T: 'static,
+    T: Iterator<Item = &'a Point> + Clone,
 {
     let mut best = 0;
     let mut best_offset = Point(0, 0, 0);
-    for ref_a in a {
+    for ref_a in a.clone() {
         for ref_b in b.iter() {
             let offset = ref_a - ref_b;
             let mut matching = 0;
             'point: for bbb in b.iter() {
-                for aaa in a {
+                for aaa in a.clone() {
                     if bbb + &offset == *aaa {
                         matching += 1;
                         continue 'point;
@@ -202,13 +209,13 @@ mod test {
     fn test_matching() {
         let a = [Point(0, 2, 0), Point(4, 1, 0), Point(3, 3, 0)];
         let b = [Point(-1, -1, 0), Point(-5, 0, 0), Point(-2, 1, 0)];
-        let (m, offset) = best_match(&a, &b);
+        let (m, offset) = best_match(a.iter(), &b);
         assert_eq!(3, m);
         assert_eq!(Point(5, 2, 0), offset);
 
         let a = [Point(0, 2, 0), Point(4, 1, 0), Point(3, 3, 0)];
         let b = [Point(0, 0, 1), Point(-5, 0, 0), Point(-2, 1, 0)];
-        let (m, offset) = best_match(&a, &b);
+        let (m, offset) = best_match(a.iter(), &b);
         assert_eq!(2, m);
         assert_eq!(Point(5, 2, 0), offset);
     }
