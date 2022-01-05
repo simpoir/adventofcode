@@ -46,10 +46,10 @@ impl crate::Day for Day {
 fn calc(pkt: &Packet) -> usize {
     match &pkt.data {
         Sub::Op(inner) => match &pkt.typ {
-            0 => inner.iter().map(|x| calc(x)).sum(),
-            1 => inner.iter().map(|x| calc(x)).product(),
-            2 => inner.iter().map(|x| calc(x)).min().unwrap(),
-            3 => inner.iter().map(|x| calc(x)).max().unwrap(),
+            0 => inner.iter().map(calc).sum(),
+            1 => inner.iter().map(calc).product(),
+            2 => inner.iter().map(calc).min().unwrap(),
+            3 => inner.iter().map(calc).max().unwrap(),
             5 => (calc(&inner[0]) > calc(&inner[1])).into(),
             6 => (calc(&inner[0]) < calc(&inner[1])).into(),
             7 => (calc(&inner[0]) == calc(&inner[1])).into(),

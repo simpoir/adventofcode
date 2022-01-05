@@ -1,5 +1,3 @@
-use std::io::Write;
-
 #[derive(Default)]
 pub struct Day {}
 
