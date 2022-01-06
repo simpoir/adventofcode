@@ -55,7 +55,7 @@ pub trait Day: Default {
                 for _ in 0..bench {
                     res = self.part1(&input);
                 }
-                println!("  Part 1: {}", res);
+                println!("{}{}  Part 1: {}", ansi_escapes::CursorTo::AbsoluteX(0), ansi_escapes::EraseLine, res);
             };
             if let Some((e, _)) = expected {
                 assert_eq!(e, res, "Differs from expected value of {:?}", e);
@@ -66,7 +66,7 @@ pub trait Day: Default {
                 for _ in 0..bench {
                     res = self.part2(&input);
                 }
-                println!("  Part 2: {}", res);
+                println!("{}{}  Part 2: {}", ansi_escapes::CursorTo::AbsoluteX(0),ansi_escapes::EraseLine, res);
             };
             if let Some((_, e)) = expected {
                 assert_eq!(e, res, "Differs from expected value of {:?}", e);
@@ -88,6 +88,12 @@ fn main() {
             Arg::with_name("no-test")
                 .short("T")
                 .help("Don't test expected values")
+                .takes_value(false),
+        )
+        .arg(
+            Arg::with_name("no-sample")
+                .short("S")
+                .help("Don't run sample data")
                 .takes_value(false),
         )
         .arg(
@@ -113,28 +119,30 @@ fn main() {
             println!("\n{}:", d);
             let challenge_dir = PathBuf::from(&format!("../data/{}", d));
 
-            let mut sample = String::new();
-            File::open(challenge_dir.join("sample"))
-                .expect("opening sample")
-                .read_to_string(&mut sample)
-                .unwrap();
-            let mut expected = String::new();
-            File::open(challenge_dir.join("expected"))
-                .expect("opening sample expected result")
-                .read_to_string(&mut expected)
-                .unwrap();
-            let expected = if args.is_present("no-test") {
-                None
-            } else {
-                Some(
-                    expected
-                        .trim()
-                        .split_once('\n')
-                        .unwrap_or((expected.trim(), "")),
-                )
-            };
-            println!(" Sample:");
-            m(sample, expected);
+            if !args.is_present("no-sample") {
+                let mut sample = String::new();
+                File::open(challenge_dir.join("sample"))
+                    .expect("opening sample")
+                    .read_to_string(&mut sample)
+                    .unwrap();
+                let mut expected = String::new();
+                File::open(challenge_dir.join("expected"))
+                    .expect("opening sample expected result")
+                    .read_to_string(&mut expected)
+                    .unwrap();
+                let expected = if args.is_present("no-test") {
+                    None
+                } else {
+                    Some(
+                        expected
+                            .trim()
+                            .split_once('\n')
+                            .unwrap_or((expected.trim(), "")),
+                    )
+                };
+                println!(" Sample:");
+                m(sample, expected);
+            }
 
             let mut input = String::new();
             File::open(challenge_dir.join("input"))

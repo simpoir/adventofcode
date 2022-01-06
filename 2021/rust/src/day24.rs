@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use std::io::Write;
 use std::{cell::Cell, hash::Hash};
 
 #[derive(Default)]
@@ -126,8 +127,18 @@ fn run<R>(
 where
     R: IntoIterator<Item = isize> + Clone,
 {
-    if idx < 10 && cache.contains(&vm.state) {
+    if cache.contains(&vm.state) {
         return None;
+    } else if idx == 4 {
+        // slow loop feedback
+        print!(
+            "{}Scan {}{}{}",
+            ansi_escapes::CursorTo::AbsoluteX(0),
+            inputs[0],
+            inputs[1],
+            inputs[2]
+        );
+        std::io::stdout().flush().unwrap();
     }
 
     let initial = vm.state.clone();
@@ -145,9 +156,7 @@ where
         }
         vm.state = initial.clone();
     }
-    if idx < 10 {
-        cache.insert(initial);
-    }
+    cache.insert(initial);
     None
 }
 

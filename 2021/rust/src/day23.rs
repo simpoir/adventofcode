@@ -140,6 +140,16 @@ fn walk_pods<const N: usize>(
 
     for (pod_idx, pod) in pods.iter().enumerate() {
         let (kind, x, y) = *pod;
+        if score == 0 {
+            // slow loop feedback
+            print!(
+                "{}{}Walking pod {}",
+                ansi_escapes::CursorTo::AbsoluteX(0),
+                ansi_escapes::EraseLine,
+                pods.len() - pod_idx
+            );
+            std::io::Write::flush(&mut std::io::stdout()).unwrap();
+        }
 
         // in corridor
         if y == 0 {
