@@ -1,3 +1,5 @@
+use std::cmp::Reverse;
+
 #[derive(Default)]
 pub struct Day {}
 
@@ -10,21 +12,22 @@ impl crate::cli::Day for Day {
 
     fn part1(&self, input: &Self::Input) -> String {
         let tgt: u32 = input / 10;
-        let mut factors = vec![0];
-        factors.reserve(tgt as usize);
+        let mut factors = std::collections::BinaryHeap::new();
         for i in 1u32.. {
-            factors.push(1);
-            let mut sum: u32 = 0;
-            for (i, n) in factors.iter_mut().enumerate().skip(1) {
-                *n -= 1;
-                if *n == 0 {
-                    *n += i as u32;
-                    sum += i as u32;
+            let mut sum: u32 = i;
+            while let Some(Reverse((nn, ii))) = factors.pop() {
+                if nn != i {
+                    factors.push(Reverse((nn, ii)));
+                    break;
                 }
+
+                sum += ii;
+                factors.push(Reverse((nn + ii, ii)));
             }
             if sum >= tgt {
                 return i.to_string();
             }
+            factors.push(Reverse((i * 2, i)));
             crate::util::progress(&sum);
         }
         unreachable!();
@@ -32,24 +35,22 @@ impl crate::cli::Day for Day {
 
     fn part2(&self, input: &Self::Input) -> String {
         let tgt: u32 = input / 11 + if input % 11 > 0 { 1 } else { 0 };
-        let mut factors = std::collections::VecDeque::new();
+        let mut factors = std::collections::BinaryHeap::new();
         for i in 1u32.. {
-            factors.push_back((i, 1, 50));
-            let mut sum: u32 = 0;
-            for (i, n, remain) in factors.iter_mut() {
-                *n -= 1;
-                if *n == 0 {
-                    *remain -= 1;
-                    *n += *i;
-                    sum += *i;
+            let mut sum: u32 = i;
+            while let Some(Reverse((nn, ii))) = factors.pop() {
+                if nn != i {
+                    factors.push(Reverse((nn, ii)));
+                    break;
                 }
+
+                sum += ii;
+                factors.push(Reverse((nn + ii, ii)));
             }
             if sum >= tgt {
                 return i.to_string();
             }
-            if factors.front().unwrap().2 == 0 {
-                factors.pop_front();
-            }
+            factors.push(Reverse((i * 2, i)));
             crate::util::progress(&sum);
         }
         unreachable!();
