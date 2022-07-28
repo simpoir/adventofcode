@@ -59,7 +59,7 @@ where
     });
 }
 
-/// Walk through all combination of things and call f(buf) with each.
+/// Walk through all subsets of the things set and call f(buf) with each.
 /// Breaks the loop if f returns false.
 #[allow(unused)]
 pub fn combine<'t, T, F>(things: &'t [T], buf: &mut [T], f: &mut F) -> bool
@@ -92,4 +92,70 @@ where
         }
     }
     true
+}
+
+pub fn permutations<T, F>(things: &[T], f: &mut F)
+where
+    T: Copy + std::fmt::Debug,
+    F: FnMut(&[T]) -> bool,
+{
+    let mut buf = things.to_vec();
+    if f(&buf) {
+        permutations_(&mut buf, things.len() - 1, f);
+    }
+}
+
+fn permutations_<T, F>(buf: &mut [T], pos: usize, f: &mut F) -> bool
+where
+    T: Copy + std::fmt::Debug,
+    F: FnMut(&[T]) -> bool,
+{
+    if pos > 1 && !permutations_(buf, pos - 1, f) {
+        return false;
+    }
+    for i in 0..pos {
+        buf.swap(pos, i);
+        if !f(buf) {
+            return false;
+        }
+        if pos > 1 && !permutations_(buf, pos - 1, f) {
+            return false;
+        }
+        buf.swap(pos, i);
+    }
+    true
+}
+
+#[cfg(test)]
+mod test {
+    use std::collections::BTreeSet;
+
+    use super::*;
+
+    #[test]
+    fn test_permutations() {
+        let input = [1, 2, 3];
+        let mut res: BTreeSet<Vec<usize>> = BTreeSet::new();
+        permutations(&input, &mut |perm| {
+            res.insert(perm.to_vec());
+            true
+        });
+        let expected = BTreeSet::from([
+            vec![1, 2, 3],
+            vec![2, 1, 3],
+            vec![3, 2, 1],
+            vec![2, 3, 1],
+            vec![1, 3, 2],
+            vec![3, 1, 2],
+        ]);
+        assert_eq!(expected, res);
+
+        res.clear();
+        permutations(&[1, 2, 3, 4], &mut |perm| {
+            println!("{perm:?}");
+            assert!(res.insert(perm.to_vec()));
+            true
+        });
+        assert_eq!(24, res.len());
+    }
 }

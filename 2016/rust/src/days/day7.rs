@@ -35,8 +35,7 @@ impl crate::cli::Day for Day {
             .iter()
             .filter(|(a, b)| {
                 a.iter()
-                    .map(|x| x.as_bytes().windows(3))
-                    .flatten()
+                    .flat_map(|x| x.as_bytes().windows(3))
                     .filter_map(aba)
                     .any(|bab| b.iter().any(|x| x.contains(&bab)))
             })

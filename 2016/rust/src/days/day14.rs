@@ -78,8 +78,7 @@ fn scan<const STRETCH: usize>(salt: &str, n: usize, threes: &mut Q, fives: &mut 
     let mut row5 = HashSet::new();
     let digest = digest
         .iter()
-        .map(|b| [*b >> 4, *b & 0xF])
-        .flatten()
+        .flat_map(|b| [*b >> 4, *b & 0xF])
         .collect::<Vec<_>>();
     for w in digest.windows(3) {
         if w[0] == w[1] && w[0] == w[2] {

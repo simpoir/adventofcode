@@ -20,7 +20,7 @@ impl crate::cli::Day for Day {
                 Rc::new((
                     head.bytes().collect(),
                     sector.parse().unwrap(),
-                    l[(l.len() - 5)..].iter().copied().collect(),
+                    l[(l.len() - 5)..].to_vec(),
                 ))
             })
             .collect()

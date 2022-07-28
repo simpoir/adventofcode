@@ -33,8 +33,7 @@ impl crate::cli::Day for Day {
     fn part2(&self, input: &Self::Input) -> String {
         input
             .chunks(3)
-            .map(|x| (0..3).map(|i| (0..3).map(|j| x[j][i]).collect::<Vec<_>>()))
-            .flatten()
+            .flat_map(|x| (0..3).map(|i| (0..3).map(|j| x[j][i]).collect::<Vec<_>>()))
             .filter(|t| {
                 let (m, max) = t.iter().enumerate().max_by_key(|x| x.1).unwrap();
                 t.iter()
