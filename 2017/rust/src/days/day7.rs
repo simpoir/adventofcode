@@ -52,14 +52,7 @@ impl<'i> crate::cli::Day<'i> for Day {
 
     fn part1(&mut self, input: &Self::Input) -> Result<String> {
         let res = (0..input.len())
-            .find(|i| {
-                input
-                    .iter()
-                    .map(|j| &j.2)
-                    .flatten()
-                    .find(|k| *k == i)
-                    .is_none()
-            })
+            .find(|i| !input.iter().flat_map(|j| &j.2).any(|k| k == i))
             .expect("one root");
         self.root = Some(res);
         Ok(input[res].1.to_string())
@@ -91,7 +84,7 @@ impl<'i> crate::cli::Day<'i> for Day {
             aggr
         }
 
-        let subweights_aggr = aggr(&root, &totals);
+        let subweights_aggr = aggr(root, &totals);
         // only works because root contains a triplet.
         let good_subweight = subweights_aggr.iter().max_by_key(|(_, v)| *v).unwrap().0;
         let bad_subnode = root
@@ -105,7 +98,7 @@ impl<'i> crate::cli::Day<'i> for Day {
             if node.2.is_empty() {
                 expected
             } else {
-                let sub_aggr = aggr(&node, totals);
+                let sub_aggr = aggr(node, totals);
                 if sub_aggr.len() == 1 {
                     expected - node.2.len() as u32 * totals[node.2[0]]
                 } else {

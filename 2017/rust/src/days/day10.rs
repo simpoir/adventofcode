@@ -6,7 +6,7 @@ pub struct Day {
     size: usize,
 }
 
-impl<'i> Default for Day {
+impl Default for Day {
     fn default() -> Self {
         Day { size: 256 }
     }
@@ -20,15 +20,12 @@ impl<'i> crate::cli::Day<'i> for Day {
     }
 
     fn part1(&mut self, data: &Self::Input) -> Result<String> {
-        let input: Vec<usize> = data
+        let input = data
             .split(',')
-            .map(|s| Result::Ok(s.parse::<usize>()?))
-            .flatten()
-            .collect();
+            .flat_map(|s| Result::Ok(s.parse::<usize>()?));
         let mut rope = (0..self.size).collect::<VecDeque<usize>>();
-        let mut skip = 0;
         let mut offset = 0;
-        for length in input {
+        for (skip, length) in input.into_iter().enumerate() {
             let mut buf = vec![];
             for _ in 0..length {
                 buf.push(rope.pop_front().unwrap());
@@ -38,7 +35,6 @@ impl<'i> crate::cli::Day<'i> for Day {
             }
             rope.rotate_left(skip);
             offset += length + skip;
-            skip += 1;
         }
         rope.rotate_right(offset % self.size);
         Ok(rope.iter().take(2).product::<usize>().to_string())

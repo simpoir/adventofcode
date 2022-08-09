@@ -11,6 +11,21 @@ mod day7;
 mod day8;
 mod day9;
 mod day10;
+mod day11;
+mod day12;
+mod day13;
+mod day14;
+mod day15;
+mod day16;
+mod day17;
+mod day18;
+mod day19;
+mod day20;
+mod day21;
+mod day22;
+mod day23;
+mod day24;
+mod day25;
 
 
 pub fn days() -> Vec<Runnable> {
@@ -25,6 +40,21 @@ pub fn days() -> Vec<Runnable> {
        Box::new(|d, args, data| day8::Day::run(d, args, data)),
        Box::new(|d, args, data| day9::Day::run(d, args, data)),
        Box::new(|d, args, data| day10::Day::run(d, args, data)),
+       Box::new(|d, args, data| day11::Day::run(d, args, data)),
+       Box::new(|d, args, data| day12::Day::run(d, args, data)),
+       Box::new(|d, args, data| day13::Day::run(d, args, data)),
+       Box::new(|d, args, data| day14::Day::run(d, args, data)),
+       Box::new(|d, args, data| day15::Day::run(d, args, data)),
+       Box::new(|d, args, data| day16::Day::run(d, args, data)),
+       Box::new(|d, args, data| day17::Day::run(d, args, data)),
+       Box::new(|d, args, data| day18::Day::run(d, args, data)),
+       Box::new(|d, args, data| day19::Day::run(d, args, data)),
+       Box::new(|d, args, data| day20::Day::run(d, args, data)),
+       Box::new(|d, args, data| day21::Day::run(d, args, data)),
+       Box::new(|d, args, data| day22::Day::run(d, args, data)),
+       Box::new(|d, args, data| day23::Day::run(d, args, data)),
+       Box::new(|d, args, data| day24::Day::run(d, args, data)),
+       Box::new(|d, args, data| day25::Day::run(d, args, data)),
 
     ]
 }

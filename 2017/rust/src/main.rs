@@ -30,7 +30,7 @@ fn main() -> Result<(), anyhow::Error> {
             .expect("opening input")
             .read_to_string(&mut input)
             .expect("success");
-        m(d as u8, &args, input.trim_end())?;
+        m(d as u8, &args, input.trim_matches(&['\n', '\r'][..]))?;
     }
     Ok(())
 }
