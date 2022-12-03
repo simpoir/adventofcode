@@ -21,4 +21,4 @@ fi
 HERE="$(dirname $(readlink -f $0))"
 DATADIR="$HERE/data"
 mkdir -p $DATADIR
-[ -f "$DATADIR/day$DAY.txt" ] || curl -H "cookie: $COOKIE" https://adventofcode.com/$YEAR/day/$DAY/input -o "$DATADIR/day$DAY.txt"
+curl -H "cookie: $COOKIE" https://adventofcode.com/$YEAR/day/$DAY/input -o "$DATADIR/day$DAY.txt"
