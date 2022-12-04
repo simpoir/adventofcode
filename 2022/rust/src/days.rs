@@ -4,6 +4,7 @@ use crate::cli::Day;
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 
 
 pub fn days() -> Vec<Runnable> {
@@ -11,6 +12,7 @@ pub fn days() -> Vec<Runnable> {
        Box::new(|d, args, data| day1::Day::run(d, args, data)),
        Box::new(|d, args, data| day2::Day::run(d, args, data)),
        Box::new(|d, args, data| day3::Day::run(d, args, data)),
+       Box::new(|d, args, data| day4::Day::run(d, args, data)),
 
     ]
 }
