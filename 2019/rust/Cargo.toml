@@ -14,3 +14,4 @@ debug = true
 ansi-escapes = "0.1.1"
 anyhow = "1.0.58"
 clap = { version = "3.0.6", features = ["derive"] }
+num = "0.4.0"
