@@ -20,7 +20,7 @@ impl<'i> crate::cli::Day<'i> for Day {
 
     fn part1(&mut self, input: &Self::Input) -> Result<String> {
         let mut visited = HashSet::new();
-        let mut this = input.clone();
+        let mut this = *input;
 
         loop {
             let mut next = [[false; 5]; 5];
