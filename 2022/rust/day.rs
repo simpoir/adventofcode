@@ -10,11 +10,11 @@ impl<'i> crate::cli::Day<'i> for Day {
         todo!();
     }
 
-    fn part1(&mut self, _input: &Self::Input) -> Result<String> {
+    fn part1(&mut self, input: &Self::Input) -> Result<String> {
         Ok("".to_string())
     }
 
-    fn part2(&mut self, _input: &Self::Input) -> Result<String> {
+    fn part2(&mut self, input: &Self::Input) -> Result<String> {
         Ok("".to_string())
     }
 }
