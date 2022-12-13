@@ -68,6 +68,9 @@ where
     std::io::Write::flush(&mut std::io::stdout()).unwrap();
 }
 
+#[allow(unused)]
+pub const DIRS: [(isize, isize); 4] = [(1, 0), (-1, 0), (0, -1), (0, 1)];
+
 #[allow(dead_code)]
 pub fn print_grid<'a, G, R>(grid: G, n: usize)
 where
