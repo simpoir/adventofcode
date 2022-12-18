@@ -69,19 +69,27 @@ where
 }
 
 #[allow(unused)]
+pub fn pause() {
+    let mut _buf = String::new();
+    std::io::stdin().read_line(&mut _buf).unwrap();
+}
+
+#[allow(unused)]
 pub const DIRS: [(isize, isize); 4] = [(1, 0), (-1, 0), (0, -1), (0, 1)];
 
 #[allow(dead_code)]
-pub fn print_grid<'a, G, R>(grid: G, n: usize)
+pub fn print_grid<'a, G, R>(grid: G, n: usize, x: usize, y: usize)
 where
     G: IntoIterator<Item = R>,
     R: IntoIterator<Item = &'a bool>,
 {
     println!();
-    grid.into_iter().take(n).for_each(|l| {
+    grid.into_iter().skip(y).take(n).for_each(|l| {
         println!(
             "{}",
             l.into_iter()
+                .skip(x)
+                .take(n)
                 .map(|c| if *c { '#' } else { '.' })
                 .collect::<String>()
         )

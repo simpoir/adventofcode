@@ -23,22 +23,21 @@ impl<'i> crate::cli::Day<'i> for Day {
 mod test {
     use super::*;
     use crate::days::Day as _;
+    const input: &str = "";
 
     #[test]
     fn test_part1() {
         let mut d: Day = Default::default();
-        let input = "";
         let expected = "";
-        let data = d.gen(input).unwrap();
+        let data = d.gen(INPUT).unwrap();
         assert_eq!(expected, d.part1(&data).unwrap());
     }
 
     #[test]
     fn test_part2() {
         let mut d: Day = Default::default();
-        let input = "";
         let expected = "";
-        let data = d.gen(input).unwrap();
+        let data = d.gen(INPUT).unwrap();
         assert_eq!(expected, d.part2(&data).unwrap());
     }
 }
