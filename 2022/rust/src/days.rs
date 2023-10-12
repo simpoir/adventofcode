@@ -19,6 +19,8 @@ mod day15;
 mod day16;
 mod day17;
 mod day18;
+mod day19;
+mod day20;
 
 
 pub fn days() -> Vec<Runnable> {
@@ -41,6 +43,8 @@ pub fn days() -> Vec<Runnable> {
        Box::new(|d, args, data| day16::Day::run(d, args, data)),
        Box::new(|d, args, data| day17::Day::run(d, args, data)),
        Box::new(|d, args, data| day18::Day::run(d, args, data)),
+       Box::new(|d, args, data| day19::Day::run(d, args, data)),
+       Box::new(|d, args, data| day20::Day::run(d, args, data)),
 
     ]
 }

@@ -99,7 +99,7 @@ where
 /// Walk through all subsets of the things set and call f(buf) with each.
 /// Breaks the loop if f returns false.
 #[allow(unused)]
-pub fn subsets<'t, T, F>(things: &'t [T], buf: &mut [T], f: &mut F) -> bool
+pub fn subsets<T, F>(things: &[T], buf: &mut [T], f: &mut F) -> bool
 where
     T: Copy + std::fmt::Debug,
     F: FnMut(&[T]) -> bool,
@@ -107,7 +107,7 @@ where
     subsets_(things, buf, 0, f)
 }
 
-fn subsets_<'t, T, F>(things: &'t [T], buf: &mut [T], idx: usize, f: &mut F) -> bool
+fn subsets_<T, F>(things: &[T], buf: &mut [T], idx: usize, f: &mut F) -> bool
 where
     T: Copy + std::fmt::Debug,
     F: FnMut(&[T]) -> bool,

@@ -23,7 +23,7 @@ impl<'i> crate::cli::Day<'i> for Day {
 mod test {
     use super::*;
     use crate::days::Day as _;
-    const input: &str = "";
+    const INPUT: &str = "";
 
     #[test]
     fn test_part1() {

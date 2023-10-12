@@ -52,32 +52,32 @@ impl<'i> crate::cli::Day<'i> for Day {
 
 impl std::cmp::Ord for List {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.partial_cmp(other).unwrap()
-    }
-}
-
-impl std::cmp::PartialOrd for List {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         match (self, other) {
-            (List::Num(a), List::Num(b)) => a.partial_cmp(b),
+            (List::Num(a), List::Num(b)) => a.cmp(b),
             (List::List(a), List::List(b)) => {
                 let mut a = a.iter();
                 let mut b = b.iter();
                 loop {
                     match (a.next(), b.next()) {
-                        (None, None) => break Some(std::cmp::Ordering::Equal),
-                        (Some(a), Some(b)) => match a.partial_cmp(b) {
-                            Some(std::cmp::Ordering::Equal) => continue,
+                        (None, None) => break std::cmp::Ordering::Equal,
+                        (Some(a), Some(b)) => match a.cmp(b) {
+                            std::cmp::Ordering::Equal => continue,
                             x => break x,
                         },
-                        (None, Some(_)) => break Some(std::cmp::Ordering::Less),
-                        (Some(_), None) => break Some(std::cmp::Ordering::Greater),
+                        (None, Some(_)) => break std::cmp::Ordering::Less,
+                        (Some(_), None) => break std::cmp::Ordering::Greater,
                     }
                 }
             }
-            (List::Num(a), List::List(_)) => List::List(vec![List::Num(*a)]).partial_cmp(other),
-            (List::List(_), List::Num(b)) => self.partial_cmp(&List::List(vec![List::Num(*b)])),
+            (List::Num(a), List::List(_)) => List::List(vec![List::Num(*a)]).cmp(other),
+            (List::List(_), List::Num(b)) => self.cmp(&List::List(vec![List::Num(*b)])),
         }
+    }
+}
+
+impl std::cmp::PartialOrd for List {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
     }
 }
 
