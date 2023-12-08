@@ -85,6 +85,21 @@ pub fn pause() {
     std::io::stdin().read_line(&mut _buf).unwrap();
 }
 
+/// plus petit commun multiple
+pub fn ppcm(a: isize, b: isize) -> isize {
+    a * b / pgcd(a.max(b), a.min(b))
+}
+
+/// plus grand commun diviseur
+fn pgcd(a: isize, b: isize) -> isize {
+    let r = a % b;
+    if r == 0 {
+        b
+    } else {
+        pgcd(b, r)
+    }
+}
+
 #[allow(unused)]
 pub const DIRS: [(isize, isize); 4] = [(1, 0), (-1, 0), (0, -1), (0, 1)];
 
