@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 
 use crate::cli::Result;
 
@@ -30,8 +30,8 @@ impl<'i> crate::cli::Day<'i> for Day {
     }
 
     fn part1(&mut self, input: &Self::Input) -> Result<String> {
-        let rows: HashSet<usize> = input.iter().map(|v| v.1).collect();
-        let cols: HashSet<usize> = input.iter().map(|v| v.0).collect();
+        let rows: BTreeSet<usize> = input.iter().map(|v| v.1).collect();
+        let cols: BTreeSet<usize> = input.iter().map(|v| v.0).collect();
 
         let mut dist = 0;
         crate::util::subsets(input, &mut [(0, 0); 2], &mut |[a, b]| {
@@ -40,18 +40,16 @@ impl<'i> crate::cli::Day<'i> for Day {
             let y0 = a.1.min(b.1);
             let y1 = a.1.max(b.1);
             dist += ((x1 - x0) * 2) + ((y1 - y0) * 2)
-                - rows.iter().filter(|row| (y0..y1).contains(*row)).count()
-                - cols.iter().filter(|col| (x0..x1).contains(col)).count();
+                - rows.range(y0..y1).count()
+                - cols.range(x0..x1).count();
             true
         });
         Ok(dist.to_string())
     }
 
     fn part2(&mut self, input: &Self::Input) -> Result<String> {
-        let mut rows: HashSet<usize> = input.iter().map(|v| v.1).collect();
-        let rows: Vec<usize> = rows.drain().collect();
-        let mut cols: HashSet<usize> = input.iter().map(|v| v.0).collect();
-        let cols: Vec<usize> = cols.drain().collect();
+        let rows: BTreeSet<usize> = input.iter().map(|v| v.1).collect();
+        let cols: BTreeSet<usize> = input.iter().map(|v| v.0).collect();
 
         let mut dist = 0;
         crate::util::subsets(input, &mut [(0, 0); 2], &mut |[a, b]| {
@@ -60,8 +58,8 @@ impl<'i> crate::cli::Day<'i> for Day {
             let y0 = a.1.min(b.1);
             let y1 = a.1.max(b.1);
             dist += ((x1 - x0) * self.expansion) + ((y1 - y0) * self.expansion)
-                - rows.iter().filter(|row| (y0..y1).contains(*row)).count() * (self.expansion - 1)
-                - cols.iter().filter(|col| (x0..x1).contains(col)).count() * (self.expansion - 1);
+                - rows.range(y0..y1).count() * (self.expansion - 1)
+                - cols.range(x0..x1).count() * (self.expansion - 1);
             true
         });
         Ok(dist.to_string())
