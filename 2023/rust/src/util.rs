@@ -139,14 +139,11 @@ where
     F: FnMut(&[T; N]) -> bool,
 {
     let next = idx + 1;
-    for (i, x) in things
-        .iter()
-        .enumerate()
-        .take(things.len() + next + 1 - buf.len())
-    {
+    for (i, x) in things.iter().enumerate().take(things.len() + next + 1 - N) {
         buf[idx] = *x;
-        let cont = if buf.len() > next {
-            subsets_(&things[(i + 1)..], buf, next, f)
+        let cont = if N > next {
+            // safety check: range already checked above
+            unsafe { subsets_(things.get_unchecked((i + 1)..), buf, next, f) }
         } else {
             f(buf)
         };
