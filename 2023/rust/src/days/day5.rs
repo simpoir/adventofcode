@@ -114,11 +114,6 @@ impl<'i> crate::cli::Day<'i> for Day {
             let (to, map) = &mapping[fro];
             from_items = slice_map(&from_items, map);
             fro = to;
-            // from_items.sort();
-            // from_items
-            //     .iter()
-            //     .for_each(|[a, l]| print!("({}, {}), ", a, a + l - 1));
-            // println!();
         }
 
         assert_eq!(

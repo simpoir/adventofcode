@@ -14,8 +14,7 @@ fn main() {
             writeln!(uses, "mod day{};", i).unwrap();
             writeln!(
                 closures,
-                "       Box::new(|d, args, data| day{}::Day::run(d, args, data)),",
-                i
+                "       Box::new(|d, args, data| day{i}::Day::run(d, args, data)),",
             )
             .unwrap();
         } else {

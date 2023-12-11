@@ -57,7 +57,12 @@ impl<'i> crate::cli::Day<'i> for Day {
             .collect::<String>()
             .parse()
             .unwrap();
-        let half = t / 2;
+
+        // let half = t / 2;
+        // Edit: not a required change, but the lowest set of factors leading to D is the square
+        // root. Any factors built from T has to be higher. So this shortcut this bruteforce into a
+        // single iteration.
+        let half = t - (t as f64).sqrt() as u64;
         for i in half..=t {
             if i * (t - i) <= d {
                 let i = i - 1;

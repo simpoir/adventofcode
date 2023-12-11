@@ -125,18 +125,18 @@ where
 /// Walk through all subsets of the things set and call f(buf) with each.
 /// Breaks the loop if f returns false.
 #[allow(unused)]
-pub fn subsets<T, F>(things: &[T], buf: &mut [T], f: &mut F) -> bool
+pub fn subsets<T, F, const N: usize>(things: &[T], buf: &mut [T; N], f: &mut F) -> bool
 where
     T: Copy + std::fmt::Debug,
-    F: FnMut(&[T]) -> bool,
+    F: FnMut(&[T; N]) -> bool,
 {
     subsets_(things, buf, 0, f)
 }
 
-fn subsets_<T, F>(things: &[T], buf: &mut [T], idx: usize, f: &mut F) -> bool
+fn subsets_<T, F, const N: usize>(things: &[T], buf: &mut [T; N], idx: usize, f: &mut F) -> bool
 where
     T: Copy + std::fmt::Debug,
-    F: FnMut(&[T]) -> bool,
+    F: FnMut(&[T; N]) -> bool,
 {
     let next = idx + 1;
     for (i, x) in things
